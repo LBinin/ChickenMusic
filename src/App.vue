@@ -1,16 +1,20 @@
 <template>
   <div id="app">
-    <Header></Header>
+    <m-header></m-header>
+    <tab></tab>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import Header from 'components/header/header'
+import MHeader from 'components/header/header'
+import Tab from 'components/tab/tab'
 
 export default {
   name: 'App',
   components: {
-    Header
+    MHeader,
+    Tab
   }
 }
 </script>
@@ -20,12 +24,4 @@ export default {
 
 #app
   color: $color-theme
-/* #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-} */
 </style>
