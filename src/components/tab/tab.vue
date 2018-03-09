@@ -37,8 +37,9 @@ $link-padding-bottom = 5px;
     .tab-link {
       padding-bottom: $link-padding-bottom;
       color: $color-text-l;
+      user-select: none;
       line-height: $tab-height - $link-border-height - $link-padding-bottom;
-      transition: all .3s;
+      transition: all 0.3s;
     }
 
     &.router-link-active {
