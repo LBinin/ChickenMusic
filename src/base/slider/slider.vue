@@ -123,6 +123,9 @@ export default {
         }
       })
 
+      // 当手动滑动的时候清除计时器
+      // 虽然自动滚动的时候也会触发
+      // 但是没关系，scrollEnd 时会继续添加计时器
       this.slider.on('beforeScrollStart', () => {
         if (this.autoPlay) {
           clearTimeout(this.timer)
