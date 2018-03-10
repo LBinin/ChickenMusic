@@ -1,13 +1,11 @@
 import jsonp from 'common/lib/jsonp'
 import axios from 'axios'
+import { option } from './config'
 
 export function getRecommend() {
   const url = 'https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg'
-  const data = {
-    param: 'jsonpCallback'
-  }
 
-  return jsonp(url, {}, data)
+  return jsonp(url, {}, option)
 }
 
 export function getDiscList() {
