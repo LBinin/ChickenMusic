@@ -1,6 +1,7 @@
 <template>
   <div class="singer">
-    <list-view :data="singers"></list-view>
+    <list-view :data="singers" @select="selectItem"></list-view>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -20,11 +21,12 @@ export default {
     }
   },
   created() {
-    setTimeout(() => {
-      this._getSingerList()
-    }, 2000);
+    this._getSingerList()
   },
   methods: {
+    selectItem(singer) {
+      this.$router.push(`/singer/${singer.id}`)
+    },
     /* 获取歌手列表 */
     _getSingerList() {
       console.log(1)

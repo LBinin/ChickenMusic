@@ -8,7 +8,7 @@
       <li v-for="group in data" class="list-group" :key="group.title" ref="listGroup">
         <h2 class="list-group-title">{{ group.title }}</h2>
         <ul>
-          <li v-for="item in group.items" :key="item.id" class="list-group-item">
+          <li @click="selectItem(item)" v-for="item in group.items" :key="item.id" class="list-group-item">
             <img v-lazy="item.avatar" :alt="item.name" class="avatar">
             <span class="name">{{ item.name }}</span>
           </li>
@@ -106,6 +106,9 @@ export default {
     },
     onShortcutTouchEnd(e) {
       this._showIndexTip(false)
+    },
+    selectItem(item) {
+      this.$emit('select', item)
     },
     /* 监听歌手列表滚动事件 */
     scroll(pos) {
