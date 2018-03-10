@@ -24,3 +24,21 @@ export function hasClass(el, className) {
   let reg = new RegExp('(^|\\s)' + className + '(\\s|$)')
   return reg.test(el.className)
 }
+
+/**
+ * 获取元素上的 data-* 值
+ * @export
+ * @param {any} el 目标元素
+ * @param {any} name data-* 后缀
+ * @param {any} val 如果为空表示获取，否则为设置
+ * @returns 视情况
+ */
+export function getData(el, name, val) {
+  const prefix = 'data-'
+  name = prefix + name
+  if (val) {
+    return el.setAttribute(name, val)
+  } else {
+    return el.getAttribute(name)
+  }
+}
