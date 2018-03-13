@@ -1,11 +1,19 @@
 <template>
   <transition name="slide">
-    <div class="singer-detail"></div>
+    <div class="singer-detail">{{ singer.name }}</div>
   </transition>
 </template>
 
 <script>
-export default {}
+import { mapGetters } from 'vuex'
+
+export default {
+  computed: {
+    ...mapGetters([
+      'singer'
+    ])
+  }
+}
 </script>
 
 <style lang="stylus" scoped>
@@ -22,7 +30,7 @@ export default {}
 }
 
 .slide-enter-active, .slide-leave-active {
-  transition: all .3s;
+  transition: all 0.3s;
 }
 
 .slide-enter, .slide-leave-to {
