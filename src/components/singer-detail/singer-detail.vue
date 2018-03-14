@@ -6,12 +6,45 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { getSingerDetail } from 'api/singer'
+import { createSong } from 'common/lib/song'
+import { ERR_OK } from 'api/config'
 
 export default {
+  data() {
+    return {
+      songs: []
+    }
+  },
   computed: {
-    ...mapGetters([
-      'singer'
-    ])
+    ...mapGetters(['singer'])
+  },
+  created() {
+    // 如果没有 singer.id 就会到 singer 页面
+    if (!this.singer.id) {
+      this.$router.push('/singer')
+    }
+    // 获取歌手详情
+    this._getSingerDetail(this.singer.id)
+  },
+  methods: {
+    _getSingerDetail(id) {
+      getSingerDetail(id).then(data => {
+        if (data.code === ERR_OK) {
+          this.songs = this._normalizeSongs(data.data.list)
+        }
+      })
+    },
+    _normalizeSongs(list) {
+      let map = []
+      list.forEach(item => {
+        let { musicData } = item
+        if (musicData.songid && musicData.albummid) {
+          map.push(createSong(musicData))
+        }
+      })
+      return map
+    }
   }
 }
 </script>

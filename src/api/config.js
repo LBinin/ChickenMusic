@@ -1,3 +1,10 @@
+export const commonParams = {
+  inCharset: 'utf-8',
+  outCharset: 'utf-8',
+  notice: 0,
+  format: 'json'
+}
+
 export const option = {
   param: 'jsonpCallback'
 }

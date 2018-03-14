@@ -32,7 +32,6 @@ export default {
     },
     /* 获取歌手列表 */
     _getSingerList() {
-      console.log(1)
       getSingerList().then(data => {
         if (data.code === ERR_OK) {
           this.singers = this._normalizeSinger(data.data.list)
