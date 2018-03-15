@@ -5,12 +5,21 @@
     </div>
     <h1 class="title" v-html="title"></h1>
     <div class="bg-image" :style="bgStyle" ref="bgImage">
-      <div class="filter"></div>
+      <div class="play-wrapper">
+        <div class="play" v-show="songs.length > 0" ref="playBtn">
+          <i class="icon-play"></i>
+          <span class="text">随机播放全部</span>
+        </div>
+      </div>
+      <div class="filter" ref="filter"></div>
     </div>
     <div class="bg-layer" ref="layer"></div>
     <scroll class="list" ref="list" @scroll="scroll" :probe-type="probeType" :listen-scroll="listenScroll">
       <div class="song-list-wrapper">
         <song-list :songs="songs"></song-list>
+      </div>
+      <div class="loading-container" v-show="!songs.length">
+        <loading></loading>
       </div>
     </scroll>
   </div>
@@ -19,8 +28,12 @@
 <script>
 import Scroll from 'base/scroll/scroll'
 import SongList from 'base/song-list/song-list'
+import Loading from 'base/loading/loading'
+import { prefixStyle } from 'common/lib/dom'
 
 const RESERVED_HEIGHT = 42
+const transform = prefixStyle('transform')
+const backdrop = prefixStyle('backdrop-filter')
 
 export default {
   props: {
@@ -67,29 +80,37 @@ export default {
     scrollY(newY) {
       // 控制 bg-layer 的位置
       let translateY = Math.max(this.minTranslateY, newY)
-      this.$refs.layer.style.transform = `translate3d(0, ${translateY}px, 0)`
-      this.$refs.layer.style.webkitTransform = `translate3d(0, ${translateY}px, 0)`
+      this.$refs.layer.style[transform] = `translate3d(0, ${translateY}px, 0)`
+      // this.$refs.layer.style.webkitTransform = `translate3d(0, ${translateY}px, 0)`
 
+      // 控制上滑后顶部预留图片位置
       let zIndex = 0
       if (newY < this.minTranslateY) {
         zIndex = 10
         this.$refs.bgImage.style.paddingTop = 0
         this.$refs.bgImage.style.height = `${RESERVED_HEIGHT}px`
+        this.$refs.playBtn.style.display = 'none'
       } else {
         this.$refs.bgImage.style.paddingTop = '70%'
         this.$refs.bgImage.style.height = `0`
+        this.$refs.playBtn.style.display = 'block'
       }
       this.$refs.bgImage.style.zIndex = zIndex
 
+      // 设置下拉后图片放大和上滑后高斯模糊
       let scale = 1
+      let blur = 0
       const percent = Math.abs(newY / this.bgImageHeight)
       if (newY > 0) {
         scale = 1 + percent
         // zIndex = 10
+      } else {
+        blur = Math.min(20 * percent, 20)
       }
-      console.log(scale)
       this.$refs.bgImage.style.transform = `scale(${scale})`
       this.$refs.bgImage.style.webkitTransform = `scale(${scale})`
+      // 仅支持 iOS
+      this.$refs.filter.style[backdrop] = `blur(${blur}px)`
     }
   },
   mounted() {
@@ -100,7 +121,8 @@ export default {
   },
   components: {
     Scroll,
-    SongList
+    SongList,
+    Loading
   }
 }
 </script>
@@ -152,8 +174,8 @@ export default {
     padding-top: 70%;
     transform-origin: top;
     background-size: cover;
-    // background-position: center center;
 
+    // background-position: center center;
     .play-wrapper {
       position: absolute;
       bottom: 20px;
@@ -207,9 +229,9 @@ export default {
     top: 0;
     bottom: 0;
     width: 100%;
+
     // background: $color-background;
     // overflow: hidden;
-
     .song-list-wrapper {
       padding: 20px 30px;
     }
