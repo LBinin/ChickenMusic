@@ -53,7 +53,7 @@ export default {
             new Singer({
               id: item.Fsinger_mid,
               name: item.Fsinger_name,
-              size: 150
+              size: 300
             })
           )
         }
@@ -70,7 +70,7 @@ export default {
           new Singer({
             id: item.Fsinger_mid,
             name: item.Fsinger_name,
-            size: 150
+            size: 300
           })
         )
       })
