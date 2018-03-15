@@ -11,7 +11,7 @@ import { getSingerList } from 'api/singer'
 import Singer from 'common/lib/singer'
 import ListView from 'base/listview/listview'
 import { mapMutations } from 'vuex'
-import * as mutationsTypes from 'src/store/mutation-type'
+import * as mutationsTypes from 'src/store/mutation-types'
 
 const HOT_TAG = '热门'
 const HOT_SINGER_LENGTH = 10
