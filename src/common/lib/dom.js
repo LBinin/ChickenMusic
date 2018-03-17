@@ -14,6 +14,21 @@ export function addClass(el, className) {
 }
 
 /**
+ * 为元素删除类名
+ * @export
+ * @param {any} el 需要删除类名的元素
+ * @param {any} className 需要删除的类名
+ */
+export function removeClass(el, className) {
+  if (!hasClass(el, className)) {
+    return
+  }
+  let oldClass = el.className.split(' ')
+  oldClass.splice(oldClass.indexOf(className), 1)
+  el.className = oldClass.join(' ')
+}
+
+/**
  * 检测元素是否有对应类名
  * @export
  * @param {any} el 需要检测的元素
