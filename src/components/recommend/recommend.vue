@@ -1,5 +1,5 @@
 <template>
-  <div class="recommend">
+  <div class="recommend" ref="recommend">
     <scroll class="recommend-content">
       <!-- 滚动组件需要父子元素，子元素用来承载滚动内容，撑开容器实现滚动 -->
       <div>
@@ -42,8 +42,10 @@ import { ERR_OK } from 'api/config'
 import Slider from 'base/slider/slider'
 import Scroll from 'base/scroll/scroll'
 import Loading from 'base/loading/loading'
+import { playlistMixin } from 'common/lib/mixin'
 
 export default {
+  mixins: [playlistMixin],
   data() {
     return {
       recommends: [],
@@ -55,6 +57,10 @@ export default {
     this._getDiscList()
   },
   methods: {
+    hadnlePlaylist(playlist) {
+      const bottom = playlist.length > 0 ? '60px' : 0
+      this.$refs.recommend.style.bottom = bottom
+    },
     /* 获取轮播图数据 */
     _getRecommend() {
       getRecommend().then(data => {

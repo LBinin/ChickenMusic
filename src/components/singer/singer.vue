@@ -1,5 +1,5 @@
 <template>
-  <div class="singer">
+  <div class="singer" ref="singer">
     <list-view :data="singers" @select="selectSinger"></list-view>
     <router-view></router-view>
   </div>
@@ -12,11 +12,13 @@ import Singer from 'common/lib/singer'
 import ListView from 'base/listview/listview'
 import { mapMutations } from 'vuex'
 import * as mutationsTypes from 'src/store/mutation-types'
+import { playlistMixin } from 'common/lib/mixin'
 
 const HOT_TAG = '热门'
 const HOT_SINGER_LENGTH = 10
 
 export default {
+  mixins: [playlistMixin],
   data() {
     return {
       singers: []
@@ -29,6 +31,10 @@ export default {
     selectSinger(singer) {
       this.$router.push(`/singer/${singer.id}`)
       this.setSinger(singer)
+    },
+    hadnlePlaylist(playlist) {
+      const bottom = playlist.length > 0 ? '60px' : 0
+      this.$refs.singer.style.bottom = bottom
     },
     /* 获取歌手列表 */
     _getSingerList() {
