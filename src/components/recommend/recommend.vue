@@ -1,6 +1,6 @@
 <template>
   <div class="recommend" ref="recommend">
-    <scroll class="recommend-content">
+    <scroll class="recommend-content" ref="scrollContent">
       <!-- 滚动组件需要父子元素，子元素用来承载滚动内容，撑开容器实现滚动 -->
       <div>
         <!-- 焦点滚动图 -->
@@ -62,6 +62,7 @@ export default {
     hadnlePlaylist(playlist) {
       const bottom = playlist.length > 0 ? '60px' : 0
       this.$refs.recommend.style.bottom = bottom
+      this.$refs.scrollContent.refresh()
     },
     selectItem(item) {
       this.$router.push({

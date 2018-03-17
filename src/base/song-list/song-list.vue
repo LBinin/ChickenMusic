@@ -2,6 +2,9 @@
   <div class="song-list">
     <ul>
       <li @click="selectItem(song, index)" v-for="(song, index) in songs" :key="song.id" class="item">
+        <div class="rank" v-show="rank">
+          <span class="icon">{{ index + 1 }}</span>
+        </div>
         <div class="content">
           <h2 class="name">{{ song.name }}</h2>
           <p class="desc">{{ getDesc(song) }}</p>
@@ -19,6 +22,10 @@ export default {
       default() {
         return []
       }
+    },
+    rank: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -44,6 +51,21 @@ export default {
     height: 64px;
     font-size: $font-size-medium;
 
+    &:nth-child(1) .icon {
+      bg-image('first');
+      color: transparent;
+    }
+
+    &:nth-child(2) .icon {
+      bg-image('second');
+      color: transparent;
+    }
+
+    &:nth-child(3) .icon {
+      bg-image('third');
+      color: transparent;
+    }
+
     .rank {
       flex: 0 0 25px;
       width: 25px;
@@ -55,18 +77,7 @@ export default {
         width: 25px;
         height: 24px;
         background-size: 25px 24px;
-
-        &.icon0 {
-          bg-image('first');
-        }
-
-        &.icon1 {
-          bg-image('second');
-        }
-
-        &.icon2 {
-          bg-image('third');
-        }
+        user-select: none;
       }
 
       .text {
