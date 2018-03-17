@@ -27,6 +27,10 @@ const mutations = {
 
   [types.SET_CURR_INDEX](state, payload) {
     state.currIndex = payload
+  },
+
+  [types.SET_DISC](state, disc) {
+    state.disc = disc
   }
 }
 

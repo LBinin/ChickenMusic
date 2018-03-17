@@ -27,3 +27,23 @@ export function getDiscList() {
       return Promise.resolve(res.data)
     })
 }
+
+export function getCDList(dissid) {
+  const url = '/api/getCDList'
+  const data = Object.assign({}, commonParams, {
+    type: 1,
+    json: 1,
+    utf8: 1,
+    onlysong: 0,
+    disstid: dissid
+  })
+
+  return axios
+    .get(url, {
+      params: data
+    })
+    .then(res => {
+      // 成功获取内容后返回一个 Promise
+      return Promise.resolve(res.data)
+    })
+}
