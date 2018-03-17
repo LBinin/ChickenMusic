@@ -436,7 +436,9 @@ export default {
       }
       if (this.currLyric) { // 重置歌词进度
         this.currLyric.stop()
+        this.currLyric = null
         this.currLineNum = 0
+        this.playingLryic = ''
       }
       setTimeout(() => {
         this.$refs.audio.play()
@@ -448,6 +450,17 @@ export default {
       this.$nextTick(() => {
         newVal ? audio.play() : audio.pause()
       })
+    },
+    fullScreen(newVal) { // 如果新进入歌曲界面跳至 CD 页面
+      if (newVal) {
+        if (this.currPage !== 'cd') {
+          this.currPage = 'cd'
+          if (this.touch.percent) {
+            this.touch.percent = null
+          }
+          this.middleTouchEnd()
+        }
+      }
     }
   },
   components: {
@@ -596,7 +609,7 @@ export default {
         height: 100%;
         overflow: hidden;
         transition: all 0.3s;
-        -webkit-mask-image: linear-gradient(to bottom,rgba(255,255,255,0) 0,rgba(255,255,255,.6) 15%,rgba(255,255,255,1) 25%,rgba(255,255,255,1) 75%,rgba(255,255,255,.6) 85%,rgba(255,255,255,0) 100%)
+        -webkit-mask-image: linear-gradient(to bottom,rgba(255,255,255,0) 0,rgba(255,255,255,.6) 10%,rgba(255,255,255,1) 20%,rgba(255,255,255,1) 80%,rgba(255,255,255,.6) 90%,rgba(255,255,255,0) 100%)
 
         &.move {
           transition: none;
@@ -607,6 +620,7 @@ export default {
           margin: 0 auto;
           overflow: hidden;
           text-align: center;
+          padding: 30px 0;
 
           .text {
             line-height: 32px;
