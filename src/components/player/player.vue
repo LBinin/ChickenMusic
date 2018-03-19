@@ -7,7 +7,7 @@
                 @after-leave="afterLeave">
       <div class="normal-player" v-show="fullScreen">
         <div class="background">
-          <img width="100%" height="100%" :src="currSong.image">
+          <img height="100%" :src="currSong.image">
         </div>
         <div class="top">
           <div class="back" @click="back">
@@ -31,6 +31,7 @@
             <div class="lyric-wrapper">
               <div v-if="currLyric">
                 <p class="text" :class="{'current': index === currLineNum}" ref="lyricLine" v-for="(line, index) in currLyric.lines" :key="line.time">{{ line.txt }}</p>
+                <span class="no-lyric" v-if="currLyric.lines.length === 0">当前歌曲暂无歌词</span>
               </div>
             </div>
           </scroll>
@@ -180,6 +181,7 @@ export default {
       }
       if (this.playlist.length === 1) { // 边界条件处理
         this.loop()
+        return
       } else {
         // 顺序播放
         let index = this.currIndex + 1
@@ -201,6 +203,7 @@ export default {
       }
       if (this.playlist.length === 1) { // 边界条件处理
         this.loop()
+        return
       } else {
         // 顺序播放
         let index = this.currIndex - 1
@@ -233,7 +236,7 @@ export default {
       }
     },
     loop() { // 歌曲循环
-      this.$refs.audio.currTime = 0
+      this.$refs.audio.currentTime = 0
       this.$refs.audio.play()
       if (this.currLyric) {
         this.currLyric.seek(0)
@@ -371,6 +374,7 @@ export default {
         this.currLyric = new Lyric(lyric, this.handleLyric)
         if (this.playing) {
           this.currLyric.play()
+          this.currLyric.seek(this.$refs.audio.currentTime * 1000)
         }
       }).catch(() => { // 获取歌词失败
         this.currLyric = null
@@ -494,6 +498,12 @@ export default {
       z-index: -1;
       opacity: 0.6;
       filter: blur(20px);
+
+      img {
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+      }
     }
 
     .top {
@@ -609,7 +619,7 @@ export default {
         height: 100%;
         overflow: hidden;
         transition: all 0.3s;
-        -webkit-mask-image: linear-gradient(to bottom,rgba(255,255,255,0) 0,rgba(255,255,255,.6) 10%,rgba(255,255,255,1) 20%,rgba(255,255,255,1) 80%,rgba(255,255,255,.6) 90%,rgba(255,255,255,0) 100%)
+        -webkit-mask-image: linear-gradient(to bottom,rgba(255,255,255,0) 0,rgba(255,255,255,.6) 10%,rgba(255,255,255,1) 20%,rgba(255,255,255,1) 80%,rgba(255,255,255,.6) 90%,rgba(255,255,255,0) 100%);
 
         &.move {
           transition: none;
@@ -631,6 +641,11 @@ export default {
             &.current {
               color: $color-text;
             }
+          }
+          .no-lyric {
+            font-size: $font-size-medium;
+            color: $color-text-l;
+            line-height: 100px;
           }
         }
       }

@@ -12,3 +12,17 @@ export function shuffle(arr) {
 
   return arr
 }
+
+// 节流函数
+export function debounce(callback, delay) {
+  let timer
+
+  return function (...args) {
+    if (timer) {
+      clearTimeout(timer)
+    }
+    timer = setTimeout(() => {
+      callback.apply(this, args)
+    }, delay)
+  }
+}
