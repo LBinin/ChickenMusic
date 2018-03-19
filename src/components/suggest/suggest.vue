@@ -107,6 +107,9 @@ export default {
     listScroll() {
       this.$emit('listScroll')
     },
+    refresh() {
+      this.$refs.suggest.refresh()
+    },
     _checkMore(data) {
       // 判断是否还有更多
       const song = data.song

@@ -59,7 +59,7 @@ export default {
     this._getDiscList()
   },
   methods: {
-    hadnlePlaylist(playlist) {
+    handlePlaylist(playlist) {
       const bottom = playlist.length > 0 ? '60px' : 0
       this.$refs.recommend.style.bottom = bottom
       this.$refs.scrollContent.refresh()

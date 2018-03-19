@@ -7,18 +7,18 @@ export const playlistMixin = {
     ])
   },
   mounted() {
-    this.hadnlePlaylist(this.playlist)
+    this.handlePlaylist(this.playlist)
   },
   activated() { // keep-alive 激活的时候
-    this.hadnlePlaylist(this.playlist)
+    this.handlePlaylist(this.playlist)
   },
   watch: {
     playlist(newList) {
-      this.hadnlePlaylist(newList)
+      this.handlePlaylist(newList)
     }
   },
   methods: {
-    hadnlePlaylist() { // 引用的组件需要复写，以覆盖 hadnlePlaylist，相当于继承
+    handlePlaylist() { // 引用的组件需要复写，以覆盖 handlePlaylist，相当于继承
       throw new Error('component must implement handlePlaylist method')
     }
   }

@@ -32,7 +32,7 @@ export default {
       this.$router.push(`/singer/${singer.id}`)
       this.setSinger(singer)
     },
-    hadnlePlaylist(playlist) {
+    handlePlaylist(playlist) {
       const bottom = playlist.length > 0 ? '60px' : 0
       this.$refs.singer.style.bottom = bottom
     },
