@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div class="player" v-show="playlist.length > 0">
     <transition name="normal"
                 @enter="enter"
@@ -82,11 +82,12 @@
             <i :class="miniIcon" class="icon-mini" @click.stop="togglePlaying"></i>
           </progress-circle>
         </div>
-        <div class="control">
+        <div class="control" @click.stop="showPlaylist">
           <i class="icon-playlist"></i>
         </div>
       </div>
     </transition>
+    <playlist ref="playlist"></playlist>
     <audio :src="currSong.url" ref="audio" @canplay="ready" @error="error" @timeupdate="updateTime" @ended="end"></audio>
   </div>
 </template>
@@ -97,14 +98,16 @@ import animations from 'create-keyframe-animation'
 import { prefixStyle, addClass, removeClass } from 'common/lib/dom'
 import ProgressBar from 'base/progress-bar/progress-bar'
 import ProgressCircle from 'base/progress-circle/progress-circle'
-import { playMode } from 'common/lib/config'
-import { shuffle } from 'common/lib/util'
 import Lyric from 'lyric-parser'
 import Scroll from 'base/scroll/scroll'
+import Playlist from 'components/playlist/playlist'
+import { playerMixin } from 'common/lib/mixin'
+import { playMode } from 'common/lib/config'
 
 const transform = prefixStyle('transform')
 
 export default {
+  mixins: [playerMixin],
   data() {
     return {
       songReady: false,
@@ -135,26 +138,10 @@ export default {
     percent() {
       return this.currTime / this.currSong.duration
     },
-    iconMode() {
-      switch (this.mode) { // 判断当前播放模式
-        case playMode.sequence:
-          return 'icon-sequence'
-        case playMode.random:
-          return 'icon-random'
-        case playMode.loop:
-          return 'icon-loop'
-        default:
-          return 'icon-sequence'
-      }
-    },
     ...mapGetters([
       'fullScreen',
-      'playlist',
-      'sequenceList',
-      'currSong',
       'playing',
-      'currIndex',
-      'mode'
+      'currIndex'
     ])
   },
   methods: {
@@ -253,21 +240,6 @@ export default {
         this.currLyric.seek(currTime * 1000)
       }
     },
-    changeMode() {
-      const mode = (this.mode + 1) % 3
-      this.setPlayMode(mode)
-      let list = null
-      if (this.mode === playMode.random) {
-        /* 深复制一份对象，否则 sequence 也会被改变 */
-        let arr = JSON.parse(JSON.stringify(this.sequenceList))
-        list = shuffle(arr)
-      } else {
-        list = this.sequenceList
-      }
-
-      this._resetCurrentIndex(list)
-      this.setPlaylist(list)
-    },
     middleTouchStart(e) {
       this.touch.initiated = true
       const touch = e.touches[0]
@@ -321,13 +293,6 @@ export default {
       removeClass(this.$refs.lyricList.$el, 'move')
       removeClass(this.$refs.middleL, 'move')
     },
-    _resetCurrentIndex(list) {
-      // 保证切换模式后不更换歌曲
-      let index = list.findIndex(item => {
-        return item.id === this.currSong.id
-      })
-      this.setCurrIndex(index)
-    },
     enter(el, done) {
       const { x, y, scale } = this._getPosAndScale()
 
@@ -370,6 +335,7 @@ export default {
       this.$refs.cdWrapper.style[transform] = ''
     },
     getLyric() {
+      console.log(this.currSong)
       this.currSong.getLyric().then(lyric => {
         this.currLyric = new Lyric(lyric, this.handleLyric)
         if (this.playing) {
@@ -392,6 +358,9 @@ export default {
         this.$refs.lyricList.scrollTo(0, 0, 1000)
       }
       this.playingLryic = txt
+    },
+    showPlaylist() {
+      this.$refs.playlist.show()
     },
     _format(interval) {
       // 格式化时间
@@ -425,15 +394,14 @@ export default {
       return { x: diffX, y: diffY, scale }
     },
     ...mapMutations({
-      setFullScreen: 'SET_FULL_SCREEN',
-      setPlayingState: 'SET_PLAYING_STATE',
-      setCurrIndex: 'SET_CURR_INDEX',
-      setPlayMode: 'SET_MODE',
-      setPlaylist: 'SET_PLAYLIST'
+      setFullScreen: 'SET_FULL_SCREEN'
     })
   },
   watch: {
     currSong(newSong, oldSong) {
+      if (!newSong.id) { // 如果没有歌曲了
+        return
+      }
       if (newSong.id === oldSong.id) {
         // 在当前歌曲暂停是切换
         return
@@ -470,7 +438,8 @@ export default {
   components: {
     ProgressBar,
     ProgressCircle,
-    Scroll
+    Scroll,
+    Playlist
   }
 }
 </script>

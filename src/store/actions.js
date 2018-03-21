@@ -12,7 +12,8 @@ function findIndex(list, song) {
 // 点击歌曲播放当前歌单
 export function selectPlay({ state, commit }, { list, index }) {
   commit(types.SET_SEQUENCE_LIST, list)
-  if (state.mode === playMode.random) { // 随机模式下排序
+  if (state.mode === playMode.random) {
+    // 随机模式下排序
     let arr = JSON.parse(JSON.stringify(list))
     let randomlist = shuffle(arr)
     commit(types.SET_PLAYLIST, randomlist)
@@ -51,8 +52,10 @@ export function insertSong({ state, commit }, song) {
   playlist.splice(++currIndex, 0, song)
 
   // 当前歌单包含该歌曲
-  if (fpIndex > -1) { // 存在待插入歌曲
-    if (currIndex > fpIndex) { // 如果插入的地方在底部
+  if (fpIndex > -1) {
+    // 存在待插入歌曲
+    if (currIndex > fpIndex) {
+      // 如果插入的地方在底部
       playlist.splice(fpIndex, 1)
       currIndex--
     } else {
@@ -94,4 +97,36 @@ export function deleteSearchHistory({ commit }, query) {
 // 清空历史纪录
 export function clearSearchHistory({ commit }) {
   commit(types.SET_SEARCH_HISTORY, clearSearch())
+}
+
+// 删除歌单中的歌曲
+export function deleteSong({ state, commit }, song) {
+  let playlist = state.playlist.slice()
+  let sequenceList = state.sequenceList.slice()
+  let currIndex = state.currIndex
+
+  let pIndex = findIndex(playlist, song)
+  playlist.splice(pIndex, 1)
+
+  let sIndex = findIndex(sequenceList, song)
+  sequenceList.splice(sIndex, 1)
+
+  if (currIndex > pIndex || currIndex === playlist.length) {
+    currIndex--
+  }
+
+  commit(types.SET_PLAYLIST, playlist)
+  commit(types.SET_SEQUENCE_LIST, sequenceList)
+  commit(types.SET_CURR_INDEX, currIndex)
+
+  const playingState = playlist.length > 0
+  commit(types.SET_PLAYING_STATE, playingState)
+}
+
+// 清空播放列表
+export function deleteSongList({ commit }) {
+  commit(types.SET_PLAYLIST, [])
+  commit(types.SET_SEQUENCE_LIST, [])
+  commit(types.SET_CURR_INDEX, -1)
+  commit(types.SET_PLAYING_STATE, false)
 }

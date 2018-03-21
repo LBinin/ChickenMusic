@@ -155,6 +155,7 @@ export default {
       .search-history {
         position: relative;
         margin: 0 20px;
+        padding-bottom: 10px;
 
         .title {
           display: flex;
