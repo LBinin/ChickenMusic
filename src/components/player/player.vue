@@ -88,7 +88,7 @@
       </div>
     </transition>
     <playlist ref="playlist"></playlist>
-    <audio :src="currSong.url" ref="audio" @canplay="ready" @error="error" @timeupdate="updateTime" @ended="end"></audio>
+    <audio :src="currSong.url" ref="audio" @play="ready" @error="error" @timeupdate="updateTime" @ended="end"></audio>
   </div>
 </template>
 
@@ -336,8 +336,10 @@ export default {
       this.$refs.cdWrapper.style[transform] = ''
     },
     getLyric() {
-      console.log(this.currSong)
       this.currSong.getLyric().then(lyric => {
+        if (this.currSong.lyric !== lyric) { // 优化逻辑
+          return
+        }
         this.currLyric = new Lyric(lyric, this.handleLyric)
         if (this.playing) {
           this.currLyric.play()
@@ -416,7 +418,10 @@ export default {
         this.currLineNum = 0
         this.playingLryic = ''
       }
-      setTimeout(() => {
+      // 解决快速点击下 BUG 以及将 audio 改为监听 @play
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
+        // 使得后台切回页面的时候可以继续执行
         this.$refs.audio.play()
         this.getLyric()
       }, 1000)
