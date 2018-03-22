@@ -6,6 +6,9 @@ const SEARCH_MAX_LENGTH = 15
 const PLAY_KEY = '__play__'
 const PLAY_MAX_LENGTH = 200
 
+const FAVORITE_KEY = '__favorite__'
+const FAVORITE_MAX_LENGTH = 200
+
 /**
  * 向数组插入数据
  * @param {Array} arr 目标数组
@@ -92,4 +95,35 @@ export function savePlay(song) {
 // 读取最近播放
 export function loadPlay() {
   return storage.get(PLAY_KEY, [])
+}
+
+// 添加到「我的收藏」
+export function saveFavorite(song) {
+  let songs = storage.get(FAVORITE_KEY, [])
+
+  insertArray(songs, song, (item) => {
+    return song.id === item.id
+  }, FAVORITE_MAX_LENGTH)
+
+  storage.set(FAVORITE_KEY, songs)
+
+  return songs
+}
+
+// 取消收藏
+export function deleteFavorite(song) {
+  let songs = storage.get(FAVORITE_KEY, [])
+
+  deleteFromArray(songs, (item) => {
+    return item.id === song.id
+  })
+
+  storage.set(FAVORITE_KEY, songs)
+
+  return songs
+}
+
+// 读取「我的收藏」
+export function loadFavorite() {
+  return storage.get(FAVORITE_KEY, [])
 }

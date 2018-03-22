@@ -1,7 +1,7 @@
 import * as types from './mutation-types'
 import { playMode } from 'common/lib/config'
 import { shuffle } from 'common/lib/util'
-import { saveSearch, deleteSearch, clearSearch, savePlay } from 'common/lib/cache'
+import { saveSearch, deleteSearch, clearSearch, savePlay, saveFavorite, deleteFavorite } from 'common/lib/cache'
 
 function findIndex(list, song) {
   return list.findIndex(item => {
@@ -14,7 +14,7 @@ export function selectPlay({ state, commit }, { list, index }) {
   commit(types.SET_SEQUENCE_LIST, list)
   if (state.mode === playMode.random) {
     // 随机模式下排序
-    let arr = JSON.parse(JSON.stringify(list))
+    let arr = list.slice()
     let randomlist = shuffle(arr)
     commit(types.SET_PLAYLIST, randomlist)
     index = findIndex(randomlist, list[index])
@@ -28,7 +28,7 @@ export function selectPlay({ state, commit }, { list, index }) {
 
 // 点击随机播放全部按钮播放乱序歌单
 export function randomPlay({ state, commit }, { list }) {
-  let arr = JSON.parse(JSON.stringify(list))
+  let arr = list.slice()
   let randomlist = shuffle(arr)
   commit(types.SET_PLAYLIST, randomlist) // 设置乱序歌单
 
@@ -134,4 +134,14 @@ export function deleteSongList({ commit }) {
 // 保存最近播放
 export function savePlayHistory({ commit }, song) {
   commit(types.SET_PLAY_HISTORY, savePlay(song))
+}
+
+// 保存歌曲到「我的收藏」
+export function saveFavoriteList({ commit }, song) {
+  commit(types.SET_FAVORITE_LIST, saveFavorite(song))
+}
+
+// 从「我的收藏」删除歌曲
+export function deleteFavoriteList({ commit }, song) {
+  commit(types.SET_FAVORITE_LIST, deleteFavorite(song))
 }
