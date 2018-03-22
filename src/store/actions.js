@@ -1,7 +1,7 @@
 import * as types from './mutation-types'
 import { playMode } from 'common/lib/config'
 import { shuffle } from 'common/lib/util'
-import { saveSearch, deleteSearch, clearSearch } from 'common/lib/cache'
+import { saveSearch, deleteSearch, clearSearch, savePlay } from 'common/lib/cache'
 
 function findIndex(list, song) {
   return list.findIndex(item => {
@@ -129,4 +129,9 @@ export function deleteSongList({ commit }) {
   commit(types.SET_SEQUENCE_LIST, [])
   commit(types.SET_CURR_INDEX, -1)
   commit(types.SET_PLAYING_STATE, false)
+}
+
+// 保存最近播放
+export function savePlayHistory({ commit }, song) {
+  commit(types.SET_PLAY_HISTORY, savePlay(song))
 }

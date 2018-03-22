@@ -11,7 +11,7 @@
         </div>
         <scroll class="list-content" ref="listContent">
           <transition-group name="list" tag="ul">
-            <li ref="listItem" @click="selectItem(item, index)" class="item" v-for="(item, index) in sequenceList" :key="item.id">
+            <li ref="listItem" @click="selectItem(item, index)" class="item" v-for="(item, index) in sequenceList" :key="index">
               <i class="current" :class="getCurrIcon(item)"></i>
               <span class="text">{{ item.name }}</span>
               <span class="like">
@@ -24,7 +24,7 @@
           </transition-group>
         </scroll>
         <div class="list-operate">
-          <div class="add">
+          <div class="add" @click="addSong">
             <i class="icon-add"></i>
             <span class="text">添加歌曲到队列</span>
           </div>
@@ -34,6 +34,7 @@
         </div>
       </div>
       <confirm ref="confirm" @confirm="confirmClear" text="是否清空播放列列表" confirmBtnText="清空"></confirm>
+      <add-song ref="addSong"></add-song>
     </div>
   </transition>
 </template>
@@ -43,6 +44,7 @@ import { mapMutations, mapActions } from 'vuex'
 import { playMode } from 'common/lib/config'
 import Scroll from 'base/scroll/scroll'
 import Confirm from 'base/confirm/confirm'
+import AddSong from 'components/add-song/add-song'
 import { playerMixin } from 'common/lib/mixin'
 
 export default {
@@ -103,6 +105,9 @@ export default {
       this.deleteSongList()
       this.hide()
     },
+    addSong() {
+      this.$refs.addSong.show()
+    },
     ...mapMutations({
       // setCurrIndex: 'SET_CURR_INDEX',
       setFullScreen: 'SET_FULL_SCREEN'
@@ -123,7 +128,8 @@ export default {
   },
   components: {
     Scroll,
-    Confirm
+    Confirm,
+    AddSong
   }
 }
 </script>
