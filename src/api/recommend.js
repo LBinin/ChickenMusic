@@ -1,6 +1,6 @@
 import jsonp from 'common/lib/jsonp'
 import axios from 'axios'
-import { option, commonParams } from './config'
+import { option, commonParams, API_BASE } from './config'
 
 export function getRecommend() {
   const url =
@@ -10,7 +10,7 @@ export function getRecommend() {
 }
 
 export function getDiscList() {
-  const url = '/api/getDiscList'
+  const url = API_BASE + 'music/getDiscList'
   const data = Object.assign({}, commonParams, {
     categoryId: 10000000,
     sin: 0,
@@ -29,7 +29,7 @@ export function getDiscList() {
 }
 
 export function getCDList(dissid) {
-  const url = '/api/getCDList'
+  const url = API_BASE + 'music/getCDList'
   const data = Object.assign({}, commonParams, {
     type: 1,
     json: 1,

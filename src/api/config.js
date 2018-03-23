@@ -10,3 +10,5 @@ export const option = {
 }
 
 export const ERR_OK = 0
+
+export const API_BASE = 'https://api.lbinin.com/'
