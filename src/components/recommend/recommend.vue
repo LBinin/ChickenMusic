@@ -75,7 +75,10 @@ export default {
       getRecommend().then(data => {
         if (data.code === ERR_OK) {
           // 获取到轮播图数据
-          this.recommends = data.data.slider
+          this.recommends = data.data.slider.map(item => {
+            item.picUrl = item.picUrl.replace('http:', 'https:') // 更改 picUrl 的协议
+            return item
+          })
         }
       })
     },
@@ -83,7 +86,10 @@ export default {
     _getDiscList() {
       getDiscList().then(data => {
         if (data.code === ERR_OK) {
-          this.discList = data.data.list
+          this.discList = data.data.list.map(item => {
+            item.imgurl = item.imgurl.replace('http:', 'https:') // 更改 picUrl 的协议
+            return item
+          })
         }
       })
     },

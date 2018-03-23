@@ -55,8 +55,10 @@ export default {
     _getRankList() {
       getRankList().then(data => {
         if (data.code === ERR_OK) {
-          this.topList = data.data.topList
-          console.log(data.data.topList)
+          this.topList = data.data.topList.map(item => {
+            item.picUrl = item.picUrl.replace('http:', 'https:') // 更改 picUrl 的协议
+            return item
+          })
         }
       })
     },

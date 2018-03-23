@@ -34,7 +34,7 @@ export default {
       }
       getMusicList(this.topList.id).then(data => {
         if (data.code === ERR_OK) {
-          this.bgImage = data.topinfo.pic_album.replace('300x300', '500x500')
+          this.bgImage = data.topinfo.pic_album.replace('300x300', '500x500').replace('http:', 'https:')
           this.songs = this._normalizeSongs(data.songlist)
         }
       })
