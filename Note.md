@@ -340,3 +340,63 @@ obj2.getLyric() // obj2.getLyric is not a function
 在 `vue-devtool`一步步的找，调试的时候发现对象内容其实没有变，应该是内容复制了，但是已经没有了 `getLyric` 方法，那么为什么会没有呢？应该只有一个原因了：这个对象已经不是 `song` 的实例了。所以，果断换成 `obj.slice()` 来复制对象，解决~ 👌🏻
 
 ---
+
+编译打包：
+
+1. 新建 `prod.server.js` 文件用于启动一个 HTTP 服务。
+2. 使用 **Express** 启动服务，并将之前在 `webpack.dev.conf.js` 中书写的路由规则放到 `prod.server.js` 文件中。
+3. 使用 `npm run build` 打包。
+4. 在 `prod.server.js` 中添加 `app.use(express.static('./dist'))` 语句用来处理刚刚打包好的静态资源。
+5. 添加如下内容，监听端口启动服务：
+
+    ```JavaScript
+    var port = process.env.PORT || config.build.port // 获取端口 ( 需要在 `config/index.js` 下的 `build` 配置 `port` 端口 )
+
+    module.exports = app.listen(port, function(err) {
+      if (err) {
+        console.log(err)
+        return
+      }
+      console.log('Listening at http://localhost:' + port + '\n')
+    })
+    ```
+
+5. 打开对应的地址。
+
+其中 `vendor.js` 为 `node_module` 中打包出的内容。
+
+---
+
+**路由懒加载**：
+
+通过「懒加载」，来减少 `app.js` 文件大小，也达到了按需进行异步加载组件的目的。
+
+**步骤**：
+
+从原来的：
+
+```JavaScript
+import Recommend from 'components/recommend/recommend'
+import Singer from 'components/singer/singer'
+import Search from 'components/search/search'
+import Rank from 'components/rank/rank'
+import SingerDetail from 'components/singer-detail/singer-detail'
+import Disc from 'components/disc/disc'
+import TopList from 'components/top-list/top-list'
+import UserCenter from 'components/user-center/user-center'
+```
+
+改成：
+
+```JavaScript
+const Recommend = () => import('components/recommend/recommend')
+const Singer = () => import('components/singer/singer')
+const Search = () => import('components/search/search')
+const Rank = () => import('components/rank/rank')
+const SingerDetail = () => import('components/singer-detail/singer-detail')
+const Disc = () => import('components/disc/disc')
+const TopList = () => import('components/top-list/top-list')
+const UserCenter = () => import('components/user-center/user-center')
+```
+
+资料参考：[路由懒加载 · vue-router](https://router.vuejs.org/zh-cn/advanced/lazy-loading.html)
