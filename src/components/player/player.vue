@@ -577,7 +577,7 @@ export default {
 
         .playing-lyric-wrapper {
           width: 80%;
-          margin: 30px auto 0 auto;
+          margin: 20px auto 0 auto;
           overflow: hidden;
           text-align: center;
 
@@ -631,7 +631,7 @@ export default {
 
     .bottom {
       position: absolute;
-      bottom: 50px;
+      bottom: 25px;
       width: 100%;
 
       .dot-wrapper {
